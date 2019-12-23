@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import ru.unn.agile.binarysearch.viewmodel.ViewModel?>
+<?import javafx.scene.control.TextArea?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.unn.agile.binarysearch.view.Search">
     <fx:define>
@@ -48,5 +49,6 @@
             <RowConstraints maxHeight="123.0" minHeight="10.0" prefHeight="123.0" vgrow="SOMETIMES" />
         </rowConstraints>
     </GridPane>
+    <TextArea fx:id="textArea"  layoutX="16.0" layoutY="176.0" prefHeight="250.0" prefWidth="540.0" wrapText="true" />
 </children>
 </AnchorPane>

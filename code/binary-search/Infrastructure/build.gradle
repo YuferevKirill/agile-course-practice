@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':binary-search-ViewModel')
+    testCompile project(':binary-search-ViewModel').sourceSets.test.output
+}

@@ -183,6 +183,8 @@ include "code/binary-search/View"
 project(":code/binary-search/View").name = "binary-search-View"
 include "code/binary-search/ViewModel"
 project(":code/binary-search/ViewModel").name = "binary-search-ViewModel"
+include "code/binary-search/Infrastructure"
+project(":code/binary-search/Infrastructure").name = "binary-search-Infrastructure"
 // Students Performance
 include "code/students-performance/model"
 project(":code/students-performance/model").name = "students-performance-model"

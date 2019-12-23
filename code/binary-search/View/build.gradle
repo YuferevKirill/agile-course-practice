@@ -13,4 +13,5 @@ javafx {
 
 dependencies {
     compile project(':binary-search-ViewModel')
+    compile project(':binary-search-Infrastructure')
 }
