@@ -1,26 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <?import ru.unn.agile.quadraticequation.viewmodel.QuadraticEquationViewModel?>
-
-<AnchorPane prefHeight="226.0" prefWidth="289.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.unn.agile.quadraticequation.view.QuadraticEquationView">
-   <children>
-       <fx:define>
-           <QuadraticEquationViewModel fx:id="viewModel" />
-       </fx:define>
-      <Label fx:id="lblResult" layoutX="14.0" layoutY="187.0" prefHeight="25.0" prefWidth="297.0" text="Label" />
-      <Label layoutX="142.0" layoutY="167.0" prefHeight="25.0" prefWidth="42.0" text="Result" />
-      <Label layoutX="21.0" layoutY="120.0" text="C" />
-      <TextField fx:id="txtCoeffC" layoutX="49.0" layoutY="116.0" prefHeight="25.0" prefWidth="128.0" />
-      <TextField fx:id="txtCoeffB" layoutX="49.0" layoutY="76.0" prefHeight="25.0" prefWidth="128.0" />
-      <TextField fx:id="txtCoeffA" layoutX="49.0" layoutY="37.0" prefHeight="25.0" prefWidth="128.0" />
-      <Label layoutX="21.0" layoutY="80.0" text="B" />
-      <Label layoutX="20.0" layoutY="41.0" text="A" />
-      <Label layoutX="48.0" layoutY="14.0" prefHeight="17.0" prefWidth="229.0" text="Format of equation: A * x^2 + B * x + C" />
-      <Button fx:id="btnCalc" layoutX="207.0" layoutY="76.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Calculate" />
-      <Label fx:id="lblError" alignment="CENTER" layoutX="99.0" layoutY="141.0" prefHeight="25.0" prefWidth="128.0" text="Label" />
-   </children>
+<AnchorPane prefHeight="343.0" prefWidth="311.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.unn.agile.quadraticequation.view.QuadraticEquationView">
+   <fx:define>
+      <QuadraticEquationViewModel fx:id="viewModel" />
+   </fx:define>
+   <Label fx:id="lblResult" layoutX="14.0" layoutY="187.0" prefHeight="25.0" prefWidth="297.0" text="Label" />
+   <Label layoutX="142.0" layoutY="167.0" prefHeight="25.0" prefWidth="42.0" text="Result" />
+   <Label layoutX="21.0" layoutY="120.0" text="C" />
+   <TextField fx:id="txtCoeffC" layoutX="49.0" layoutY="116.0" prefHeight="25.0" prefWidth="128.0" />
+   <TextField fx:id="txtCoeffB" layoutX="49.0" layoutY="76.0" prefHeight="25.0" prefWidth="128.0" />
+   <TextField fx:id="txtCoeffA" layoutX="49.0" layoutY="37.0" prefHeight="25.0" prefWidth="128.0" />
+   <Label layoutX="21.0" layoutY="80.0" text="B" />
+   <Label layoutX="20.0" layoutY="41.0" text="A" />
+   <Label layoutX="48.0" layoutY="14.0" prefHeight="17.0" prefWidth="229.0" text="Format of equation: A * x^2 + B * x + C" />
+   <Button fx:id="btnCalc" layoutX="207.0" layoutY="76.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Calculate" />
+   <Label fx:id="lblError" alignment="CENTER" layoutX="99.0" layoutY="141.0" prefHeight="25.0" prefWidth="128.0" text="Label" />
+   <TextArea fx:id="areaLog" editable="false" layoutX="21.0" layoutY="219.0" prefHeight="113.0" prefWidth="270.0" text="${viewModel.logs}" VBox.vgrow="ALWAYS" />
 </AnchorPane>

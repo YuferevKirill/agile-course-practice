@@ -7,6 +7,7 @@ import ru.unn.agile.temperatureconverter.model.FahrenheitTemperature;
 import ru.unn.agile.temperatureconverter.model.KelvinTemperature;
 import ru.unn.agile.temperatureconverter.model.Temperature;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,6 +20,8 @@ public class ViewModel {
     private ListOfTemperatures listTemperaturesTo;
     private boolean isConvertButtonEnabled;
     private boolean isErrorMessageDisplayed;
+
+    private ILogger logger;
 
     private String patternInput = "-?(\\d+)(\\.(\\d+))?";
 
@@ -61,6 +64,10 @@ public class ViewModel {
         return listTemperaturesTo;
     }
 
+    public List<String> getLog() {
+        return logger.getLogMessage();
+    }
+
     public boolean isConvertButtonEnabled() {
         return isConvertButtonEnabled;
     }
@@ -69,25 +76,43 @@ public class ViewModel {
         return isErrorMessageDisplayed;
     }
 
-    public ViewModel() {
+    public ViewModel(final ILogger logger) {
+        if (logger == null) {
+            throw new IllegalArgumentException("Logger parameter can't be null");
+        }
+
+        this.logger = logger;
         resultTemperature = "";
         fromTemperature = "";
         listTemperaturesFrom = ListOfTemperatures.CELSIUS;
+        logger.addLog("Input updated: from temperature = " + listTemperaturesFrom);
         listTemperaturesTo = ListOfTemperatures.CELSIUS;
+        logger.addLog("Input updated: to temperature = " + listTemperaturesTo);
         statusText = "";
         isConvertButtonEnabled = false;
     }
 
     public void setFromTemperature(final String fromTemperature) {
-        this.fromTemperature = fromTemperature;
+        if (!fromTemperature.equals(this.fromTemperature)) {
+            this.fromTemperature = fromTemperature;
+            logger.addLog("Input updated: value of from temperature = " + fromTemperature);
+        }
     }
+
     public void setFrom(final ListOfTemperatures listTemperaturesFrom) {
-        this.resultTemperature = "";
-        this.listTemperaturesFrom = listTemperaturesFrom;
+        if (this.listTemperaturesFrom != listTemperaturesFrom) {
+            this.resultTemperature = "";
+            this.listTemperaturesFrom = listTemperaturesFrom;
+            logger.addLog("Input updated: from temperature = " + listTemperaturesFrom);
+        }
     }
+
     public void setTo(final ListOfTemperatures listTemperaturesTo) {
-        this.resultTemperature = "";
-        this.listTemperaturesTo = listTemperaturesTo;
+        if (this.listTemperaturesTo != listTemperaturesTo) {
+            this.resultTemperature = "";
+            this.listTemperaturesTo = listTemperaturesTo;
+            logger.addLog("Input updated: to temperature = " + listTemperaturesTo);
+        }
     }
 
     private boolean matchInput(final String line, final String pattern) {
@@ -124,7 +149,6 @@ public class ViewModel {
             }
             return false;
         }
-        statusText = "";
         return true;
     }
 
@@ -137,10 +161,12 @@ public class ViewModel {
         } else {
             isConvertButtonEnabled = false;
             isErrorMessageDisplayed = true;
+            logger.addLog("Error is displayed: " + statusText);
         }
     }
 
     public void calculate() {
+        logger.addLog("Calculate");
         processInput();
         if (isConvertButtonEnabled()) {
             resultTemperature = "";
@@ -169,6 +195,10 @@ public class ViewModel {
             }
 
             resultTemperature = Double.toString(toClass.getValue());
+            logger.addLog("From: " + getFrom()
+                    + "; To: " + getTo()
+                    + "; Initial temperature = " + getFromTemperature()
+                    + "; Result temperature = " + getResultTemperature());
         }
     }
 }

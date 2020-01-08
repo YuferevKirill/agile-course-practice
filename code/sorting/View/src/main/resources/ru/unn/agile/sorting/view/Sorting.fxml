@@ -10,13 +10,14 @@
         <ViewModel fx:id="viewModel" />
       </fx:define>
   <children>
-    <Button fx:id="btnSort" layoutX="299.0" layoutY="101.0" mnemonicParsing="false" prefWidth="70.0" text="Sort" />
+    <Button fx:id="btnSort" layoutX="299.0" layoutY="101.0" mnemonicParsing="false" prefHeight="33.99" prefWidth="70.0" text="Sort" />
     <Label layoutX="14.0" layoutY="15.0" prefHeight="34.0" prefWidth="374.0" text="Enter numbers with a space" />
     <TextField fx:id="txtArray" layoutX="14.0" layoutY="57.0" prefHeight="33.99" prefWidth="554.0" />
     <Label layoutX="14.0" layoutY="101.0" prefHeight="34.0" prefWidth="147.0" text="Sort direction:" />
-    <Label layoutX="14.0" layoutY="159.0" prefHeight="27.0" prefWidth="57.0" text="Result:" />
-    <Label fx:id="lbResult" layoutX="14.0" layoutY="186.0" prefHeight="34.0" prefWidth="540.0" text="${viewModel.sortedArray}" />
+    <Label layoutX="14.0" layoutY="150.0" prefHeight="27.0" prefWidth="57.0" text="Result:" />
+    <Label fx:id="lbResult" layoutX="14.0" layoutY="180.0" prefHeight="34.0" prefWidth="540.0" text="${viewModel.sortedArray}" />
     <ComboBox fx:id="cbDirection" layoutX="161.0" layoutY="101.0" prefHeight="33.99" items="${viewModel.directions}" />
-    <Label fx:id="lbError" layoutX="71.0" layoutY="160.99" prefWidth="496.99" text="${viewModel.error}" />
+    <Label fx:id="lbError" layoutX="71.0" layoutY="150.0" prefHeight="27.0" prefWidth="100.0" text="${viewModel.error}" />
   </children>
+  <TextArea fx:id="areaLog" text="${viewModel.logs}" layoutX="14.0" layoutY="220.0" editable="false" prefHeight="200.0" prefWidth="554.0" VBox.vgrow="ALWAYS" />
 </AnchorPane>

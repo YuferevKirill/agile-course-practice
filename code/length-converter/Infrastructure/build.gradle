@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':length-converter-ViewModel')
+    testCompile project(':length-converter-ViewModel').sourceSets.test.output
+}

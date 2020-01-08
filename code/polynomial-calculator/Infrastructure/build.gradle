@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':polynomial-calculator-viewmodel')
+	testCompile project(':polynomial-calculator-viewmodel').sourceSets.test.output
+}

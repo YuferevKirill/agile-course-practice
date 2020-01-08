@@ -5,16 +5,25 @@ import javafx.beans.property.StringProperty;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class ViewModelTests {
 
     private static final double DELTA = 1e-3;
     private ViewModel viewModel;
+
     @Before
     public void setUp() {
-        viewModel = new ViewModel();
+        ILogger fakeLogger = new FakeTextLogger();
+        viewModel = new ViewModel(fakeLogger);
     }
+
+    public void setViewModel(final ViewModel matrixViewModel) {
+        this.viewModel = matrixViewModel;
+    }
+
     @Test
     public void canSetDefaultValuesToFirstMatrix() {
         assertEquals("", viewModel.getFirstMatrixProperties()[0].get());
@@ -70,6 +79,54 @@ public class ViewModelTests {
         viewModel.sumMatrices();
     }
 
+    @Test
+    public void logIsEmptyAtTheBeginningOfWork() {
+        List<String> log = viewModel.getLog();
+
+        assertTrue(log.isEmpty());
+    }
+
+    @Test
+    public void canSetLoggerInMatrixViewModel() {
+        viewModel.setLogger(new FakeTextLogger());
+        assertNotNull(viewModel.getLogger());
+    }
+
+    @Test
+    public void canLogStartOfComparingMatrices() {
+        setCorrectInputData();
+        viewModel.compareMatrices();
+        var logMessages = viewModel.getLog();
+        var lastLogMessages = logMessages.get(logMessages.size() - 2);
+        assertTrue(lastLogMessages.contains(ViewModel.LogMessages.START));
+    }
+
+    @Test
+    public void canLogFinishOfComparingMatrices() {
+        setCorrectInputData();
+        viewModel.compareMatrices();
+        var logMessages = viewModel.getLog();
+        var lastLogMessages = logMessages.get(logMessages.size() - 1);
+        assertTrue(lastLogMessages.contains(ViewModel.LogMessages.FINISH));
+    }
+
+    @Test
+    public void canLogStartOfTransposeMatrix() {
+        setCorrectInputData();
+        viewModel.transposeFirstMatrix();
+        var logMessages = viewModel.getLog();
+        var encodedMessage = logMessages.get(logMessages.size() - 2);
+        assertTrue(encodedMessage.contains(ViewModel.LogMessages.START));
+    }
+
+    @Test
+    public void canLogFinishOfTransposeMatrix() {
+        setCorrectInputData();
+        viewModel.transposeFirstMatrix();
+        var logMessages = viewModel.getLog();
+        var lastLogMessages = logMessages.get(logMessages.size() - 1);
+        assertTrue(lastLogMessages.contains(ViewModel.LogMessages.FINISH));
+    }
     private void setCorrectInputData() {
         viewModel.setFirstMatrixProperties(new StringProperty[] {
                 new SimpleStringProperty("1"),
@@ -99,5 +156,4 @@ public class ViewModelTests {
         });
         viewModel.setSecondMatrixProperties(viewModel.getFirstMatrixProperties());
     }
-
 }

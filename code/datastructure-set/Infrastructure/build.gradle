@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':datastructure-set-ViewModel')
+    testCompile project(':datastructure-set-ViewModel').sourceSets.test.output
+}

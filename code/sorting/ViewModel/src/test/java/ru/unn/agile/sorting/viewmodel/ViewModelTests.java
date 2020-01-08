@@ -5,15 +5,26 @@ import org.junit.Before;
 import org.junit.Test;
 import ru.unn.agile.sorting.model.api.Direction;
 
-import static org.junit.Assert.assertEquals;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class ViewModelTests {
 
     private ViewModel viewModel;
 
+    public void setExternalViewModel(final ViewModel viewModel) {
+        this.viewModel = viewModel;
+    }
+
+    private void setCorrectInput() {
+        viewModel.inputArrayProperty().set("2 4 3");
+        viewModel.directionProperty().set(Direction.ASC);
+    }
+
     @Before
     public void setUp() {
-        viewModel = new ViewModel();
+        viewModel = new ViewModel(new SortingFakeLogger());
     }
 
     @After
@@ -117,5 +128,66 @@ public class ViewModelTests {
         viewModel.sort();
         assertEquals("Bad format", viewModel.errorProperty().get());
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void viewModelConstructorThrowsExceptionWithNullLogger() {
+            new ViewModel(null);
+    }
+
+    @Test
+    public void logIsEmptyInTheBeginning() {
+        List<String> log = viewModel.getLog();
+
+        assertTrue(log.isEmpty());
+    }
+
+    @Test
+    public void logContainsProperMessageAfterSorting() {
+        setCorrectInput();
+        viewModel.sort();
+        String message = viewModel.getLog().get(0);
+
+        assertTrue(message.matches(".*" + LogMessages.SORTED + ".*"));
+    }
+
+    @Test
+    public void logContainsInputArgumentsAfterSorting() {
+        setCorrectInput();
+        String inputStr = "2, 4, 3";
+        viewModel.sort();
+
+        String message = viewModel.getLog().get(0);
+        assertTrue(message.matches(".*" + inputStr + ".*"
+                + viewModel.directionProperty().get() + ".*"));
+    }
+
+    @Test
+    public void canSeeDirectionChangeInLog() {
+        setCorrectInput();
+
+        viewModel.directionProperty().set(Direction.DESC);
+
+        String message = viewModel.getLog().get(0);
+        assertTrue(message.matches(".*" + LogMessages.CHANGE_DIRECTION + ".*"));
+    }
+
+    @Test
+    public void canPutSeveralLogMessages() {
+        setCorrectInput();
+
+        viewModel.sort();
+        viewModel.sort();
+
+        assertEquals(2, viewModel.getLog().size());
+    }
+
+    @Test
+    public void directionIsNotLoggedIfNotChanged() {
+        viewModel.directionProperty().set(Direction.ASC);
+
+        assertEquals(0, viewModel.getLog().size());
+    }
+
 }
+
 

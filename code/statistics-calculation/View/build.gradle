@@ -13,6 +13,7 @@ javafx {
 
 dependencies {
     compile project(':statistics-calculation-ViewModel')
+    compile project(':statistics-calculation-Infrastructure')
 }
 
 

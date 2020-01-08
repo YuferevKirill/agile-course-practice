@@ -1,10 +1,14 @@
 package ru.unn.agile.temperatureconverter.view;
+
+import ru.unn.agile.temperatureconverter.infrastructure.TxtLogger;
 import ru.unn.agile.temperatureconverter.viewmodel.ViewModel;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 public class TemperatureConverter {
     private JLabel labelHello;
@@ -17,12 +21,14 @@ public class TemperatureConverter {
     private JButton buttonConvert;
     private JLabel labelStatus;
     private JTextField fromField;
+    private JList<String> listLogs;
 
     private ViewModel viewModel;
 
     public static void main(final String[] args) {
         JFrame frame = new JFrame("Temperature Converter");
-        frame.setContentPane(new TemperatureConverter(new ViewModel()).mainPanel);
+        TxtLogger logger = new TxtLogger("./TemperatureConverter.log");
+        frame.setContentPane(new TemperatureConverter(new ViewModel(logger)).mainPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
@@ -59,6 +65,10 @@ public class TemperatureConverter {
         buttonConvert.setEnabled(viewModel.isConvertButtonEnabled());
         labelResult.setText(viewModel.getResultTemperature());
         labelStatus.setText(viewModel.getStatusText());
+
+        List<String> log = viewModel.getLog();
+        String[] items = log.toArray(new String[log.size()]);
+        listLogs.setListData(items);
     }
 
     private void bind() {

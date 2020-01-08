@@ -2,6 +2,8 @@ package ru.unn.agile.Matrix.viewmodel;
 import ru.unn.agile.Matrix.Model.Matrix;
 import javafx.beans.property.*;
 
+import java.util.List;
+
 public class ViewModel {
 
     private static final int DEFAULT_MATRIX_SIZE = 3;
@@ -14,8 +16,11 @@ public class ViewModel {
     private StringProperty[] resultMatrixProperties =
             new SimpleStringProperty[DEFAULT_MATRIX_SIZE * DEFAULT_MATRIX_SIZE];
     private final StringProperty result = new SimpleStringProperty();
+    private ILogger logger;
 
-    public ViewModel() {
+    public ViewModel(final ILogger logger) {
+        this.logger = logger;
+
         for (int i = 0; i < firstMatrixProperties.length; i++) {
             firstMatrixProperties[i] = new SimpleStringProperty("");
         }
@@ -37,6 +42,31 @@ public class ViewModel {
             }
         }
         return result;
+    }
+
+    public final void setLogger(final ILogger logger) {
+        if (logger == null) {
+            throw new IllegalArgumentException("Logger parameter can't be null");
+        }
+        this.logger = logger;
+    }
+
+    public ILogger getLogger() {
+        return logger;
+    }
+
+    public final List<String> getLog() {
+        return logger.getLog();
+    }
+
+        public final class LogMessages {
+        static final String START = " method was started";
+        static final String EMPTY_MATRIX = "Matrices full filled with wrong args";
+        static final String WRONG_ARGS = "Matrices full filled with wrong args";
+        static final String NON_NUMERIC_ARGS = "Matrices must be filled with correct numeric args";
+        static final String FINISH = " method was completed";
+
+        private LogMessages() { }
     }
 
     public StringProperty[] getFirstMatrixProperties() {
@@ -100,17 +130,21 @@ public class ViewModel {
     }
 
     public void compareMatrices() {
+        logger.logMessage("compareMatrices" + LogMessages.START);
         if (!isPossibleToProcess(1) || !isPossibleToProcess(2)) {
+            logger.logMessage(LogMessages.WRONG_ARGS);
             throw new NumberFormatException("Matrices full filled with wrong args");
         }
         firstMatrix.initByArray(getFirstMatrixValues());
         secondMatrix.initByArray(getSecondMatrixValues());
         result.set(Boolean.toString(firstMatrix.equals(secondMatrix)));
-        System.out.println(result.get());
+        logger.logMessage("compareMatrices" + LogMessages.FINISH);
     }
 
     public void transposeFirstMatrix() {
+        logger.logMessage("transposeFirstMatrix" + LogMessages.START);
         if (!isPossibleToProcess(1)) {
+            logger.logMessage(LogMessages.EMPTY_MATRIX);
             throw new NumberFormatException("Matrix must be filled");
         }
         firstMatrix.initByArray(getFirstMatrixValues());
@@ -119,10 +153,13 @@ public class ViewModel {
         for (i = 0; i < firstMatrixProperties.length; i++) {
             firstMatrixProperties[i].set(String.valueOf(transposedValues[i]));
         }
+        logger.logMessage("transposeFirstMatrix" + LogMessages.FINISH);
     }
 
     public void transposeSecondMatrix() {
+        logger.logMessage("transposeSecondMatrix" + LogMessages.START);
         if (!isPossibleToProcess(2)) {
+            logger.logMessage(LogMessages.NON_NUMERIC_ARGS);
             throw new NumberFormatException("Matrix must be filled with correct numeric arguments");
         }
         secondMatrix.initByArray(getSecondMatrixValues());
@@ -131,10 +168,13 @@ public class ViewModel {
         for (i = 0; i < secondMatrixProperties.length; i++) {
             secondMatrixProperties[i].set(String.valueOf(transposedValues[i]));
         }
+        logger.logMessage("transposeSecondMatrix" + LogMessages.FINISH);
     }
 
     public void sumMatrices() {
+        logger.logMessage("sumMatrices" + LogMessages.START);
         if (!isPossibleToProcess(1) || !isPossibleToProcess(2)) {
+            logger.logMessage(LogMessages.NON_NUMERIC_ARGS);
             throw new NumberFormatException("Matrices must be filled with correct numeric args");
         }
         firstMatrix.initByArray(getFirstMatrixValues());
@@ -144,6 +184,7 @@ public class ViewModel {
         for (int i = 0; i < resultMatrixProperties.length; i++) {
             resultMatrixProperties[i].set(String.valueOf(sumValues[i]));
         }
+        logger.logMessage("sumMatrices" + LogMessages.FINISH);
     }
 
     private double[] convertMatrixToArray(final Matrix matrix) {

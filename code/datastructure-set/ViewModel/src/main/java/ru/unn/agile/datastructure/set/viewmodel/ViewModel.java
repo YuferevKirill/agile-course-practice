@@ -7,6 +7,7 @@ import javafx.beans.property.StringProperty;
 import ru.unn.agile.datastructure.set.model.MySet;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 public class ViewModel {
@@ -24,7 +25,13 @@ public class ViewModel {
     private MySet<Integer> currentSet = new MySet<>();
     private Set<Integer> enteredSet = new LinkedHashSet<>();
 
-    public ViewModel() {
+    private Logger logger;
+
+    public ViewModel(final Logger logger) {
+        if (logger == null) {
+            throw new IllegalArgumentException("Logger can not be null");
+        }
+        this.logger = logger;
         btnAddDisabledProp.setValue(true);
         btnRemoveDisabledProp.setValue(true);
         btnRetainDisabledProp.setValue(true);
@@ -36,6 +43,7 @@ public class ViewModel {
         txtCurrentSetProp.setValue("");
 
         txtEnteredItemsProp.addListener((observable, oldValue, newValue) -> {
+            logger.log(String.format(LogMessages.ENTERED_ITEMS_CHANGED, oldValue, newValue));
             setEnteredItems(newValue);
         });
     }
@@ -73,26 +81,31 @@ public class ViewModel {
     }
 
     public void addEnteredItems() {
+        logger.log(LogMessages.ADD_PRESSED);
         currentSet.addAll(enteredSet);
         txtCurrentSetProp.setValue(getCurrentSetItems());
     }
 
     public void removeEnteredItems() {
+        logger.log(LogMessages.REMOVE_PRESSED);
         currentSet.removeAll(enteredSet);
         txtCurrentSetProp.setValue(getCurrentSetItems());
     }
 
     public void retainEnteredItems() {
+        logger.log(LogMessages.RETAIN_PRESSED);
         currentSet.retainAll(enteredSet);
         txtCurrentSetProp.setValue(getCurrentSetItems());
     }
 
     public void clearCurrentItems() {
+        logger.log(LogMessages.CLEAR_PRESSED);
         currentSet.clear();
         txtCurrentSetProp.setValue(getCurrentSetItems());
     }
 
     public void containsEnteredItems() {
+        logger.log(LogMessages.CONTAINS_PRESSED);
         if (currentSet.containsAll(enteredSet)) {
             txtContainsItemProp.setValue("Yes");
         } else {
@@ -101,11 +114,16 @@ public class ViewModel {
     }
 
     public void isCurrentSetEmpty() {
+        logger.log(LogMessages.IS_EMPTY_PRESSED);
         if (currentSet.isEmpty()) {
             txtIsEmptySetProp.setValue("Yes");
         } else {
             txtIsEmptySetProp.setValue("No");
         }
+    }
+
+    public List<String> getLog() {
+        return logger.getLog();
     }
 
     private void setEnteredItems(final String itemsStr) {
@@ -147,5 +165,18 @@ public class ViewModel {
         }
         builder.deleteCharAt(builder.length() - 1);
         return builder.toString();
+    }
+
+    static final class LogMessages {
+        private LogMessages() {
+        }
+
+        static final String ADD_PRESSED = "Add button pressed";
+        static final String REMOVE_PRESSED = "Remove button pressed";
+        static final String RETAIN_PRESSED = "Retain button pressed";
+        static final String CLEAR_PRESSED = "Clear button pressed";
+        static final String CONTAINS_PRESSED = "Contains button pressed";
+        static final String IS_EMPTY_PRESSED = "Contains button pressed";
+        static final String ENTERED_ITEMS_CHANGED = "Entered items changed from '%s' to '%s'";
     }
 }

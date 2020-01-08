@@ -3,6 +3,7 @@ package ru.unn.agile.complexnumbercalculator.viewmodel;
 import ru.unn.agile.complexnumbercalculator.model.ComplexNumber;
 import ru.unn.agile.complexnumbercalculator.model.ComplexNumberCalculator;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,6 +28,8 @@ public class ViewModel {
     private String patternDegreePow = "-?(\\d+)";
     private String patternDegreeRoot = "(\\d+)";
 
+    private ILogger logger;
+
     private static final int ENTER = 10;
 
     public enum Operations {
@@ -48,7 +51,15 @@ public class ViewModel {
         }
     }
 
-    public ViewModel() {
+    public final class LogMessages {
+        public static final String OPERATION_WAS_CHANGED = "Operation was changed from ";
+        public static final String CALCULATE_WAS_PRESSED = "Calculate. ";
+        public static final String ARGUMENT_WAS_CHANGED = "Updated argument ";
+
+        private LogMessages() { }
+    }
+
+    public ViewModel(final ILogger logger) throws IllegalArgumentException {
         result = "";
         firstRe = "";
         firstIm = "";
@@ -61,6 +72,12 @@ public class ViewModel {
         isDegreeVisible = false;
         isErrorMessageDisplayed = false;
         isSecondNumberVisible = true;
+
+        if (logger == null) {
+            throw new IllegalArgumentException("Logger parameter can't be null");
+        }
+        this.logger = logger;
+
     }
 
     public String getResult() {
@@ -72,6 +89,12 @@ public class ViewModel {
     }
 
     public void setFirstRe(final String firstRe) {
+        if (firstRe.equals(this.firstRe)) {
+            return;
+        }
+
+        logger.addToLog(getArgumentWasChangedLogMessage("FirstRe",
+                this.firstRe, firstRe));
         this.firstRe = firstRe;
     }
 
@@ -80,7 +103,12 @@ public class ViewModel {
     }
 
     public void setFirstIm(final String firstIm) {
+        if (firstIm.equals(this.firstIm)) {
+            return;
+        }
 
+        logger.addToLog(getArgumentWasChangedLogMessage("FirstIm",
+                this.firstIm, firstIm));
         this.firstIm = firstIm;
     }
 
@@ -89,6 +117,12 @@ public class ViewModel {
     }
 
     public void setSecondRe(final String secondRe) {
+        if (secondRe.equals(this.secondRe)) {
+            return;
+        }
+
+        logger.addToLog(getArgumentWasChangedLogMessage("SecondRe",
+                this.secondRe, secondRe));
         this.secondRe = secondRe;
     }
 
@@ -97,6 +131,12 @@ public class ViewModel {
     }
 
     public void setSecondIm(final String secondIm) {
+        if (secondIm.equals(this.secondIm)) {
+            return;
+        }
+
+        logger.addToLog(getArgumentWasChangedLogMessage("SecondIm",
+                this.secondIm, secondIm));
         this.secondIm = secondIm;
     }
 
@@ -105,6 +145,11 @@ public class ViewModel {
     }
 
     public void setDegree(final String degree) {
+        if (degree.equals(this.degree)) {
+            return;
+        }
+
+        logger.addToLog(getArgumentWasChangedLogMessage("Degree", this.degree, degree));
         this.degree = degree;
     }
 
@@ -113,6 +158,11 @@ public class ViewModel {
     }
 
     public void setOperations(final Operations operation) {
+        if (operation.equals(this.operations)) {
+            return;
+        }
+
+        logger.addToLog(getChangeOperationLogMessage(operation));
         this.result = "";
         this.operations = operation;
     }
@@ -163,15 +213,16 @@ public class ViewModel {
                 ComplexNumber z2 = ComplexNumber.createAlgebraicForm(
                         Double.parseDouble(getSecondRe()),
                         Double.parseDouble(getSecondIm()));
-                if (getOperations().equals(Operations.ADD)) {
+                if (getOperations() == Operations.ADD) {
                     result = ComplexNumberCalculator.add(z1, z2).toString();
-                } else if (getOperations().equals(Operations.SUBTRACT)) {
+                } else if (getOperations() == Operations.SUBTRACT) {
                     result = ComplexNumberCalculator.subtract(z1, z2).toString();
-                } else if (getOperations().equals(Operations.MULTIPLY)) {
+                } else if (getOperations() == Operations.MULTIPLY) {
                     result = ComplexNumberCalculator.multiply(z1, z2).toString();
-                } else if (getOperations().equals(Operations.DIVIDE)) {
+                } else if (getOperations() == Operations.DIVIDE) {
                     result = ComplexNumberCalculator.divide(z1, z2).toString();
                 }
+                logger.addToLog(getCalculateLogMessageWithBinaryOperation());
             } else if (isSecondGroupOperation(getOperations())) {
                 ComplexNumber z = ComplexNumber.createAlgebraicForm(
                         Double.parseDouble(getFirstRe()),
@@ -186,13 +237,16 @@ public class ViewModel {
                         result += resultList[i].toString() + "; ";
                     }
                 }
+                logger.addToLog(getCalculateLogMessageWithParametricOperation());
             } else if (getOperations().equals(Operations.CONJUGATION)) {
                 ComplexNumber z = ComplexNumber.createAlgebraicForm(
                         Double.parseDouble(getFirstRe()),
                         Double.parseDouble(getFirstIm()));
                 result = ComplexNumberCalculator.conjugation(z).toString();
+                logger.addToLog(getCalculateLogMessageWithUnaryOperation());
             }
         }
+
     }
 
     private void hideDegree() {
@@ -300,5 +354,47 @@ public class ViewModel {
             isErrorMessageDisplayed = true;
         }
         setError();
+    }
+
+    public List<String> getLog() {
+        return logger.getLog();
+    }
+
+    private String getChangeOperationLogMessage(final Operations operation) {
+        return LogMessages.OPERATION_WAS_CHANGED + operations.toString()
+                + " to " + operation.toString();
+    }
+
+    private String getCalculateLogMessageWithBinaryOperation() {
+        return LogMessages.CALCULATE_WAS_PRESSED + "Arguments: "
+                + "(" + firstRe + " + " + firstIm + "i), "
+                + "(" + secondRe + " + " + secondIm + "i). "
+                + "Operation: " + operations.toString() + ". "
+                + "Result: (" + result + ").";
+    }
+
+    private String getCalculateLogMessageWithUnaryOperation() {
+        return LogMessages.CALCULATE_WAS_PRESSED + "Argument: "
+                + "(" + firstRe + " + " + firstIm + "i). "
+                + "Operation: " + operations.toString() + ". "
+                + "Result: (" + result + ").";
+    }
+
+    private String getCalculateLogMessageWithParametricOperation() {
+        return LogMessages.CALCULATE_WAS_PRESSED + "Arguments: "
+                + "(" + firstRe + " + " + firstIm + "i), "
+                + "Degree = " + degree
+                + ". "
+                + "Operation: " + operations.toString() + ". "
+                + "Result: (" + result + ").";
+    }
+
+    private String getArgumentWasChangedLogMessage(final String argumentName,
+                                                   final String argumentBefore,
+                                                   final String argumentAfter) {
+        return LogMessages.ARGUMENT_WAS_CHANGED + argumentName
+                + " from " + argumentBefore
+                + " to " + argumentAfter
+                + ".";
     }
 }

@@ -7,16 +7,21 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class ViewModelTests {
+
     private ViewModel viewModel;
 
     @Before
     public void setUp() {
-        viewModel = new ViewModel();
+        setViewModel(new ViewModel(new FakeLogger()));
     }
 
     @After
     public void tearDown() {
         viewModel = null;
+    }
+
+    protected void setViewModel(final ViewModel viewModel) {
+        this.viewModel = viewModel;
     }
 
     @Test
@@ -126,5 +131,77 @@ public class ViewModelTests {
         viewModel.addEnteredItems();
         viewModel.isCurrentSetEmpty();
         assertEquals("No", viewModel.getTxtIsEmptyItemProp().getValue());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void canNotCreateViewModelWithNullLogger() {
+        new ViewModel(null);
+    }
+
+    @Test
+    public void canGetEmptyLogInTheBegging() {
+        var log = viewModel.getLog();
+
+        assertTrue(log.isEmpty());
+    }
+
+    @Test
+    public void canLogChangingEnteredText() {
+        var oldValue = "";
+        var newValue = "12 6";
+
+        viewModel.getTxtEnteredItemsProp().setValue(newValue);
+
+        var expectedMessage =
+                String.format(ViewModel.LogMessages.ENTERED_ITEMS_CHANGED, oldValue, newValue);
+        assertTrue(viewModel.getLog().get(0).matches(".*" + expectedMessage + "$"));
+    }
+
+    @Test
+    public void canLogPressingAddButton() {
+        viewModel.addEnteredItems();
+
+        var expectedMessage = ViewModel.LogMessages.ADD_PRESSED;
+        assertTrue(viewModel.getLog().get(0).matches(".*" + expectedMessage + "$"));
+    }
+
+    @Test
+    public void canLogPressingRemoveButton() {
+        viewModel.removeEnteredItems();
+
+        var expectedMessage = ViewModel.LogMessages.REMOVE_PRESSED;
+        assertTrue(viewModel.getLog().get(0).matches(".*" + expectedMessage + "$"));
+    }
+
+    @Test
+    public void canLogPressingRetainButton() {
+        viewModel.retainEnteredItems();
+
+        var expectedMessage = ViewModel.LogMessages.RETAIN_PRESSED;
+        assertTrue(viewModel.getLog().get(0).matches(".*" + expectedMessage + "$"));
+    }
+
+    @Test
+    public void canLogPressingContainsButton() {
+        viewModel.containsEnteredItems();
+
+        var expectedMessage = ViewModel.LogMessages.CONTAINS_PRESSED;
+        assertTrue(viewModel.getLog().get(0).matches(".*" + expectedMessage + "$"));
+    }
+
+    @Test
+    public void canLogPressingIsEmptyButton() {
+        viewModel.isCurrentSetEmpty();
+
+        var expectedMessage = ViewModel.LogMessages.IS_EMPTY_PRESSED;
+        assertTrue(viewModel.getLog().get(0).matches(".*" + expectedMessage + "$"));
+    }
+
+    @Test
+    public void canLogPressingClearButton() {
+        viewModel.clearCurrentItems();
+
+        var expectedMessage = ViewModel.LogMessages.CLEAR_PRESSED;
+        assertTrue(viewModel.getLog().get(0).matches(".*" + expectedMessage + "$"));
     }
 }

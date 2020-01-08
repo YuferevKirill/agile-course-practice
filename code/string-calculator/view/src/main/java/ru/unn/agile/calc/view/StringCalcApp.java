@@ -11,7 +11,7 @@ public class StringCalcApp extends Application {
     private static final String APP_TITLE = "String Calculator";
     private static final String APP_FXML = "StringCalculator.fxml";
     private static final String STYLE_RESOURCES = "style.css";
-    private static final int APP_HEIGHT = 350;
+    private static final int APP_HEIGHT = 550;
     private static final int APP_WIDTH = 600;
 
     @Override

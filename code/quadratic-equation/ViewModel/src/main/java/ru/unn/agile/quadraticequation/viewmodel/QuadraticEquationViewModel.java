@@ -7,6 +7,8 @@ import javafx.beans.property.StringProperty;
 import ru.unn.agile.ComplexNumber.model.ComplexNumber;
 import ru.unn.agile.quadraticequation.model.QuadraticEquation;
 
+import java.util.List;
+
 public class QuadraticEquationViewModel {
     private BooleanProperty btnCalcDisabledProp = new SimpleBooleanProperty();
     private StringProperty txtCoeffAProp = new SimpleStringProperty();
@@ -14,8 +16,22 @@ public class QuadraticEquationViewModel {
     private StringProperty txtCoeffCProp = new SimpleStringProperty();
     private StringProperty txtResultProp = new SimpleStringProperty();
     private StringProperty getTxtErrorProp = new SimpleStringProperty();
+    private final StringProperty logs = new SimpleStringProperty();
+    private QuadraticEquationILogger logger;
 
     public QuadraticEquationViewModel() {
+        init();
+    }
+
+    public QuadraticEquationViewModel(final QuadraticEquationILogger logger) {
+        if (logger == null) {
+            throw new IllegalArgumentException("Logger parameter can't be null");
+        }
+        this.logger = logger;
+        init();
+    }
+
+    private void init() {
         btnCalcDisabledProp.setValue(true);
         txtCoeffAProp.setValue("");
         txtCoeffBProp.setValue("");
@@ -76,16 +92,29 @@ public class QuadraticEquationViewModel {
             getTxtErrorProp.setValue("Incorrect Input Data");
             return;
         }
-        setTxtResultProp(qe.solve());
+        ComplexNumber[] result = qe.solve();
+        String res = formatResult(result);
+        String message = "Calculate for: " + "A = " + txtCoeffAProp.get()
+                + " B = " + txtCoeffBProp.get()
+                + " C = " + txtCoeffCProp.get()
+                + " Result: " + res;
+        logger.log(message);
+        updateLogs();
+        setTxtResultProp(res);
     }
 
-    private void setTxtResultProp(final ComplexNumber[] result) {
+    private String formatResult(final ComplexNumber[] result) {
         StringBuilder res = new StringBuilder();
         res.append("X1 = ").append(result[0]);
         if (result.length > 1) {
             res.append("; X2 = ").append(result[1]);
         }
-        txtResultProp.setValue(res.toString());
+
+        return res.toString();
+    }
+
+    private void setTxtResultProp(final String result) {
+        txtResultProp.setValue(result);
     }
 
     private boolean canConvertCoeffsToDouble() {
@@ -101,5 +130,26 @@ public class QuadraticEquationViewModel {
 
     public StringProperty getTxtErrorProperty() {
         return getTxtErrorProp;
+    }
+
+    public List<String> getLog() {
+        return logger.getLog();
+    }
+
+    public void setLogger(final QuadraticEquationILogger logger) {
+        this.logger = logger;
+    }
+
+    public final String getLogs() {
+        return logs.get();
+    }
+
+    private void updateLogs() {
+        List<String> fullLog = logger.getLog();
+        StringBuilder record = new StringBuilder("");
+        for (String log : fullLog) {
+            record.append(log).append("\n");
+        }
+        logs.set(record.toString());
     }
 }

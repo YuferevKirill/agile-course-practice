@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import ru.unn.agile.queue.viewmodel.*?>
+
+<AnchorPane prefHeight="274.0" prefWidth="393.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.unn.agile.queue.view.Queue">
+   <fx:define>
+      <ViewModel fx:id="viewModel" />
+   </fx:define>
+   <children>
+      <Pane layoutY="8.0" prefHeight="362.0" prefWidth="468.0">
+         <children>
+            <Label layoutX="15.0" layoutY="14.0" prefHeight="25.0" prefWidth="138.0" text="Element to add:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <TextField fx:id="queueNewElement" layoutX="154.0" layoutY="14.0" prefHeight="25.0" prefWidth="117.0" />
+            <Button fx:id="addElement" layoutX="352.0" layoutY="14.0" mnemonicParsing="false" text="Add element" />
+            <Button fx:id="popElement" layoutX="352.0" layoutY="52.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="101.0" text="Pop element" />
+            <Label layoutX="15.0" layoutY="306.0" prefHeight="25.0" prefWidth="117.0" text="Queue status:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="queueResult" layoutX="144.0" layoutY="306.0" prefHeight="25.0" prefWidth="315.0">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </Label>
+            <Button fx:id="clearQueue" layoutX="352.0" layoutY="85.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="101.0" text="Clear queue" />
+            <Label layoutX="14.0" layoutY="55.0" text="Status:">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <Label fx:id="status" layoutX="84.0" layoutY="55.0" prefHeight="15.0" prefWidth="254.0">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <Button fx:id="getHead" layoutX="352.0" layoutY="121.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="101.0" text="Get head" />
+            <Button fx:id="getTail" layoutX="352.0" layoutY="156.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="101.0" text="Get tail" />
+            <ScrollPane layoutX="15.0" layoutY="97.0" prefHeight="197.0" prefWidth="328.0">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="307.0">
+                     <children>
+                        <TextArea prefHeight="200.0" prefWidth="309.0" text="${viewModel.textLogger}" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </ScrollPane>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

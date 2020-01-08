@@ -9,6 +9,7 @@ import javafx.beans.value.ObservableValue;
 import ru.unn.agile.statisticscalculation.model.DiscreteRandomVariable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 enum InputDataStatus {
@@ -62,6 +63,16 @@ enum OperationStatus {
     }
 }
 
+final class LogMessages {
+    public static final String CALCULATE_WAS_PRESSED = "Calculate. ";
+    public static final String OPERATION_WAS_CHANGED = "Operation was changed to ";
+    public static final String UPDATE_TABLE = "Updated input. ";
+    public static final String DELETE_ELEMENT_IN_TABLE = "Deleted element. ";
+    public static final String SELECTED_ELEMENT_IN_TABLE = "Selected element in table. ";
+
+    private LogMessages() { }
+}
+
 public class ViewModel {
     private final StringProperty newValue = new SimpleStringProperty();
     private final StringProperty newProbability = new SimpleStringProperty();
@@ -80,6 +91,12 @@ public class ViewModel {
 
     private final IntegerProperty selectedListIndex = new SimpleIntegerProperty();
 
+    public StringProperty logsProperty() {
+        return logs;
+    }
+
+    private final StringProperty logs = new SimpleStringProperty();
+
     private final ObjectProperty<ObservableList<Operation>> operations =
             new SimpleObjectProperty<>(FXCollections.observableArrayList(Operation.values()));
     private final ObjectProperty<Operation> operation = new SimpleObjectProperty<>();
@@ -90,7 +107,26 @@ public class ViewModel {
     private static final String EMPTY = "";
     private DiscreteRandomVariable discreteRandomVariable;
 
+    private ILogger logger;
+
+    public final void setLoggerToViewModel(final ILogger logger) {
+        if (logger == null) {
+            throw new IllegalArgumentException("Logger parameter can't be null");
+        }
+        this.logger = logger;
+    }
+
+    // FXML needs default c-tor for binding
     public ViewModel() {
+        init();
+    }
+
+    public ViewModel(final ILogger logger) {
+        setLoggerToViewModel(logger);
+        init();
+    }
+
+    public void init() {
         setInputFieldsToEmpty();
         operationParameter.set(EMPTY);
 
@@ -273,7 +309,9 @@ public class ViewModel {
     public ObjectProperty<Operation> operationProperty() {
         return operation;
     }
-
+    public final String getLogs() {
+        return logs.get();
+    }
     public void updateTableElement() {
         inputDataStatus.set(calculateInputDataStatus().toString());
         if (calculateInputDataStatus() == InputDataStatus.READY) {
@@ -283,6 +321,14 @@ public class ViewModel {
             } else {
                 listData.add(new TableElement(newValue.getValue(), newProbability.getValue()));
             }
+
+            StringBuilder message = new StringBuilder(LogMessages.UPDATE_TABLE);
+            message.append("Value = ").append(newValue.get())
+                    .append("; Probability = ").append(newProbability.getValue())
+                    .append(" Operation: ").append(getOperationStatus()).append(".");
+            logger.addLog(message.toString());
+            updateLogstoView();
+
             setInputFieldsToEmpty();
             inputDataStatus.set(calculateInputDataStatus().toString());
         }
@@ -292,6 +338,12 @@ public class ViewModel {
 
     public void deleteTableElement(final int focusedIndex) {
         if (focusedIndex >= 0 && focusedIndex < listData.size()) {
+            StringBuilder message = new StringBuilder(LogMessages.DELETE_ELEMENT_IN_TABLE);
+            message.append("Value = ").append(listData.get(focusedIndex).getValue())
+                    .append("; Probability = ").append(listData.get(focusedIndex).getProbability())
+                    .append(" Operation: ").append(getOperationStatus()).append(".");
+            logger.addLog(message.toString());
+            updateLogstoView();
             listData.remove(focusedIndex);
         }
         setInputFieldsToEmpty();
@@ -307,10 +359,22 @@ public class ViewModel {
             newProbability.set(listData.get(selectedListIndex.get()).getProbability());
             inputDataStatus.set(calculateInputDataStatus().toString());
         }
+        StringBuilder message = new StringBuilder(LogMessages.SELECTED_ELEMENT_IN_TABLE);
+        message.append("Index in table: ").append(selectedListIndex.get())
+                .append("; Value = ").append(listData.get(selectedListIndex.get()).getValue())
+                .append("; Probability = ")
+                .append(listData.get(selectedListIndex.get()).getProbability())
+                .append(".");
+        logger.addLog(message.toString());
+        updateLogstoView();
     }
 
     public void updateOperation() {
         operationStatus.set(calculateOperationStatus().toString());
+        StringBuilder message = new StringBuilder(LogMessages.OPERATION_WAS_CHANGED);
+        message.append(operation.get().toString()).append(".");
+        logger.addLog(message.toString());
+        updateLogstoView();
     }
 
     public void calculate() {
@@ -319,6 +383,19 @@ public class ViewModel {
                     discreteRandomVariable, operationParameter.get());
             operationStatus.set(OperationStatus.SUCCESS.toString());
             result.set(operationResult.toString());
+
+            StringBuilder message = new StringBuilder(LogMessages.CALCULATE_WAS_PRESSED);
+            message.append("Operation = ").append(operation.get().toString())
+                    .append("; Operation parameter = ").append(operationParameter.get())
+                    .append("; Values = ")
+                    .append(Arrays.toString(discreteRandomVariable.getValues()))
+                    .append("; Probabilities = ")
+                    .append(Arrays.toString(discreteRandomVariable.getProbabilities()))
+                    .append("; Result = ").append(operationResult)
+                    .append(".");
+            logger.addLog(message.toString());
+            updateLogstoView();
+
         } catch (IllegalArgumentException exception) {
             result.set(exception.toString());
         }
@@ -412,6 +489,22 @@ public class ViewModel {
     private void setInputFieldsToEmpty() {
         newValue.set(EMPTY);
         newProbability.set(EMPTY);
+    }
+
+    public List<String> getLog() {
+        if (logger == null) {
+            throw new IllegalArgumentException("Logger is null");
+        }
+        return logger.getLog();
+    }
+
+    private void updateLogstoView() {
+        List<String> fullLog = logger.getLog();
+        String record = new String("");
+        for (String log : fullLog) {
+            record += log + "\n";
+        }
+        logs.set(record);
     }
 
     private class UpdateDataChangeListener implements ChangeListener<String> {

@@ -29,6 +29,7 @@
       <Label layoutX="22.0" layoutY="138.0" text="Процентная ставка:" />
       <Label layoutX="22.0" layoutY="173.0" text="Результат:" />
 
+      <TextArea fx:id="areaLog" editable="false" layoutX="22.0" layoutY="300.0" prefHeight="100.0" prefWidth="275.0" />
    </children>
 
 </AnchorPane>

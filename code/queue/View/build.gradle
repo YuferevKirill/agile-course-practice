@@ -13,4 +13,5 @@ javafx {
 
 dependencies {
     compile project(':queue-ViewModel')
+    compile project(':queue-Infrastructure')
 }

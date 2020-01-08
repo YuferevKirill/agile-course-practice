@@ -12,5 +12,6 @@ javafx {
 }
 
 dependencies {
-	compile project(':sorting-ViewModel')
+    compile project(':sorting-ViewModel')
+    compile project(':sorting-Infrastructure')
 }

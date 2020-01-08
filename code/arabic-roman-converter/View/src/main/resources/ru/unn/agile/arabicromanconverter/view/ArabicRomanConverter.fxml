@@ -10,21 +10,22 @@
     <fx:define>
         <ViewModel fx:id="viewModel" />
     </fx:define>
-    <TextField fx:id="inputField" layoutX="14.0" layoutY="66.0" prefHeight="35.0" prefWidth="149.0" />
-    <TextField fx:id="outputField" editable="false" layoutX="204.0" layoutY="66.0" prefHeight="35.0" prefWidth="149.0" />
-    <Label layoutX="179.0" layoutY="74.0" text="=">
+    <TextField fx:id="inputField" layoutX="15.0" layoutY="66.0" prefHeight="35.0" prefWidth="215.0" />
+    <TextField fx:id="outputField" editable="false" layoutX="270.0" layoutY="66.0" prefHeight="35.0" prefWidth="215.0" />
+    <Label layoutX="245.0" layoutY="74.0" text="=">
         <font>
             <Font size="14.0" />
         </font>
     </Label>
-    <Button fx:id="btnConvert" layoutX="14.0" layoutY="136.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="341.0" text="Конвертировать" />
+    <Button fx:id="btnConvert" layoutX="15.0" layoutY="136.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="470.0" text="Конвертировать" />
     <Label fx:id="lblError" layoutX="15.0" layoutY="1.0" text="Label" textFill="RED" />
     <Label fx:id="lblConvert" layoutX="15.0" layoutY="40.0" text="Label" textFill="BLACK" />
-    <Button fx:id="btnSwap" graphicTextGap="40.0" layoutX="174.0" layoutY="105.0" mnemonicParsing="false" prefHeight="4.0" prefWidth="21.0" text="⇄">
+    <Button fx:id="btnSwap" graphicTextGap="40.0" layoutX="240.0" layoutY="105.0" mnemonicParsing="false" prefHeight="4.0" prefWidth="21.0" text="⇄">
         <font>
             <Font size="24.0" />
         </font>
         <padding>
             <Insets bottom="-7.0" top="-7.0" />
         </padding></Button>
+    <TextArea fx:id="areaLog" text="${viewModel.logs}" prefWidth="500" layoutY="165.0"  editable="false"  VBox.vgrow="ALWAYS" />
 </AnchorPane>

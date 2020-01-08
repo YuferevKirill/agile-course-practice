@@ -13,5 +13,6 @@ javafx {
 
 dependencies {
     compile project(':deposit-calculator-viewmodel')
+    compile project(':deposit-calculator-infrastructure')
 }
 

@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':cross-sections-ViewModel')
+    testCompile project(':cross-sections-ViewModel').sourceSets.test.output
+}

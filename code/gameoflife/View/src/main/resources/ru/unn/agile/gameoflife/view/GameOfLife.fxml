@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import ru.unn.agile.gameoflife.viewmodel.*?>
+
+<AnchorPane prefHeight="510.0" prefWidth="410.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.unn.agile.gameoflife.view.GameOfLife">
+    <fx:define>
+        <ViewModel fx:id="viewModel" />
+    </fx:define>
+    <children>
+      <Label layoutX="26.0" layoutY="14.0" text="Height of field" AnchorPane.topAnchor="14.0" />
+      <Label layoutX="206.0" layoutY="14.0" text="Width of field" AnchorPane.topAnchor="14.0" />
+      <Label fx:id="txtStatus" layoutX="26.0" layoutY="42.0" text="Status" AnchorPane.topAnchor="42.0" />
+      <Button fx:id="btnCreate" layoutX="81.0" layoutY="67.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" text="Create" AnchorPane.leftAnchor="55.0" AnchorPane.topAnchor="67.0" />
+      <Button fx:id="btnNext" layoutX="81.0" layoutY="67.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" text="Next" AnchorPane.leftAnchor="262.0" AnchorPane.topAnchor="67.0" />
+      <TextField fx:id="txtHeight" layoutX="111.0" layoutY="10.0" prefHeight="25.0" prefWidth="77.0" AnchorPane.topAnchor="10.0" />
+      <TextField fx:id="txtwidth" layoutX="290.0" layoutY="10.0" prefHeight="25.0" prefWidth="77.0" AnchorPane.topAnchor="10.0" />
+      <GridPane fx:id="gridGame" layoutX="58.0" layoutY="232.0" prefHeight="226.0" prefWidth="253.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="105.0" />
+   </children>
+</AnchorPane>

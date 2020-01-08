@@ -13,4 +13,5 @@ javafx {
 
 dependencies {
 	compile project(':quadratic-equation-ViewModel')
+	compile project(':quadratic-equation-Infrastructure')
 }

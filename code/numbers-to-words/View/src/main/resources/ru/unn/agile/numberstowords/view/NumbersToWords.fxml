@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import ru.unn.agile.numberstowords.viewmodel.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.unn.agile.numberstowords.view.NumbersToWords">
+   <fx:define>
+      <ViewModel fx:id="viewModel" />
+   </fx:define>
+   <children>
+      <AnchorPane prefHeight="200.0" prefWidth="361.0">
+         <children>
+            <TextField fx:id="txtNumber" layoutX="26.0" layoutY="45.0" prefHeight="25.0" prefWidth="115.0" />
+            <Label layoutX="26.0" layoutY="28.0" text="Number: " />
+            <Label layoutX="26.0" layoutY="123.0" text="Text:" />
+            <Button fx:id="btnConvert" layoutX="84.0" layoutY="81.0" mnemonicParsing="false" text="convert" />
+            <TextField fx:id="txtText" layoutX="26.0" layoutY="140.0" prefHeight="25.0" prefWidth="309.0" />
+            <Label fx:id="labelErrorMsg" alignment="TOP_LEFT" layoutX="158.0" layoutY="41.0" prefHeight="84.0" prefWidth="172.0" wrapText="true" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

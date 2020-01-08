@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':complex-number-calculator-ViewModel')
+    testCompile project(':complex-number-calculator-ViewModel').sourceSets.test.output
+}

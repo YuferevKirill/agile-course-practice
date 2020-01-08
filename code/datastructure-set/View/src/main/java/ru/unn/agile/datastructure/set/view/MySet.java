@@ -4,10 +4,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import ru.unn.agile.datastructure.set.infrastructure.TxtLogger;
 import ru.unn.agile.datastructure.set.viewmodel.ViewModel;
 
 public class MySet {
-    @FXML
+
     private ViewModel viewModel;
     @FXML
     private Button btnAdd;
@@ -32,6 +33,7 @@ public class MySet {
 
     @FXML
     void initialize() {
+        viewModel = new ViewModel(new TxtLogger("./TxtLogger-lab3.log"));
         btnAdd.disableProperty().bindBidirectional(viewModel.isAddButtonDisabled());
         btnRemove.disableProperty().bindBidirectional(viewModel.isRemoveButtonDisabled());
         btnRetain.disableProperty().bindBidirectional(viewModel.isRetainButtonDisabled());

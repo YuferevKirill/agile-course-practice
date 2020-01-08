@@ -8,6 +8,7 @@ import ru.unn.agile.sorting.model.api.Sorting;
 import ru.unn.agile.sorting.model.impl.NumberSorting;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class ViewModel {
     private final StringProperty inputArray = new SimpleStringProperty();
@@ -17,8 +18,26 @@ public class ViewModel {
     private final ObjectProperty<Direction> direction = new SimpleObjectProperty<>();
     private final StringProperty sortedArray = new SimpleStringProperty();
     private final StringProperty error = new SimpleStringProperty();
+    private final StringProperty logs = new SimpleStringProperty();
+    private ISortingLogger logger;
+
+    public final void setLogger(final ISortingLogger logger) {
+        if (logger == null) {
+            throw new IllegalArgumentException("Logger parameter can't be null");
+        }
+        this.logger = logger;
+    }
 
     public ViewModel() {
+        init();
+    }
+
+    public ViewModel(final ISortingLogger logger) {
+        setLogger(logger);
+        init();
+    }
+
+    private void init() {
         inputArray.set("");
         direction.set(Direction.ASC);
         sortButtonDisabled.set(true);
@@ -26,6 +45,12 @@ public class ViewModel {
         error.set("");
         inputArray.addListener((observable, oldValue, newValue) -> {
             onInput(newValue);
+        });
+        direction.addListener((observable, oldValue, newValue) -> {
+            StringBuilder message = new StringBuilder(LogMessages.CHANGE_DIRECTION);
+            message.append(newValue).append(".");
+            logger.log(message.toString());
+            updateLogs();
         });
     }
 
@@ -39,9 +64,18 @@ public class ViewModel {
             }
             String result = Arrays.toString(numberSorting.sort(numbers));
             sortedArray.set(result.substring(1, result.length() - 1));
+            StringBuilder message = new StringBuilder(LogMessages.SORTED);
+            message.append(Arrays.toString(strInputArray))
+                    .append(" to ")
+                    .append("[" + sortedArray.getValue() + "] ")
+                    .append(directionProperty().get());
+            logger.log(message.toString());
         } catch (NumberFormatException ex) {
             error.set("Bad format");
             sortedArray.set("");
+            logger.log(LogMessages.INCORRECT_INPUT);
+        } finally {
+            updateLogs();
         }
     }
 
@@ -90,4 +124,35 @@ public class ViewModel {
     public BooleanProperty sortButtonDisabledProperty() {
         return sortButtonDisabled;
     }
+
+    public StringProperty logsProperty() {
+        return logs;
+    }
+
+    public final String getLogs() {
+        return logs.get();
+    }
+
+    public final List<String> getLog() {
+        return logger.getLog();
+    }
+
+    private void updateLogs() {
+        List<String> fullLog = logger.getLog();
+        String record = new String("");
+        for (String log : fullLog) {
+            record += log + "\n";
+        }
+        logs.set(record);
+    }
 }
+
+final class LogMessages {
+    public static final String SORTED = "Sorted following: ";
+    public static final String CHANGE_DIRECTION = "Direction swapped to: ";
+    public static final String INCORRECT_INPUT = "Incorrect input. ";
+
+    private LogMessages() {
+    }
+}
+

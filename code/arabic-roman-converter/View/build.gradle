@@ -14,4 +14,5 @@ javafx {
 
 dependencies {
     compile project(':arabic-roman-converter-ViewModel')
+    compile project(':arabic-roman-converter-Infrastructure')
 }

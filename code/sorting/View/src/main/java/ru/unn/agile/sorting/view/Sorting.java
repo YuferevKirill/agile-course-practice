@@ -6,6 +6,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import ru.unn.agile.sorting.model.api.Direction;
 import ru.unn.agile.sorting.viewmodel.ViewModel;
+import ru.unn.agile.sorting.infrastructure.TxtLogger;
 
 public class Sorting {
     @FXML
@@ -19,6 +20,7 @@ public class Sorting {
 
     @FXML
     void initialize() {
+        viewModel.setLogger(new TxtLogger("./TxtLogger-lab3.log"));
         txtArray.textProperty().bindBidirectional(viewModel.inputArrayProperty());
         cbDirection.valueProperty().bindBidirectional(viewModel.directionProperty());
         btnSort.disableProperty().bindBidirectional(viewModel.sortButtonDisabledProperty());

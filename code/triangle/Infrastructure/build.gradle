@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':triangle-ViewModel')
+    testCompile project(':triangle-ViewModel').sourceSets.test.output
+}

@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':bit-array-ViewModel')
+    testCompile project(':bit-array-ViewModel').sourceSets.test.output
+}

@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':temperature-converter-ViewModel')
+	testCompile project(':temperature-converter-ViewModel').sourceSets.test.output
+}

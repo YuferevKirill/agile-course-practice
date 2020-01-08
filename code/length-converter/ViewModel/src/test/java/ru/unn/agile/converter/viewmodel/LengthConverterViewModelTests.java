@@ -5,15 +5,29 @@ import org.junit.Before;
 import org.junit.Test;
 import ru.unn.agile.converter.model.LengthType;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class LengthConverterViewModelTests {
 
     private LengthConverterViewModel viewModel;
 
+    public void setExternalViewModel(final LengthConverterViewModel viewModel) {
+        this.viewModel = viewModel;
+    }
+
+    private void setCorrectInput() {
+        viewModel.getInput().set("2");
+        viewModel.getFromType().set(LengthType.KILOMETER);
+        viewModel.getToType().set(LengthType.METER);
+    }
+
     @Before
     public void setUp() {
-        viewModel = new LengthConverterViewModel();
+        if (viewModel == null) {
+            viewModel = new LengthConverterViewModel(new LengthConverterFakeLogger());
+        }
     }
 
     @After
@@ -200,5 +214,99 @@ public class LengthConverterViewModelTests {
         viewModel.swap();
 
         assertEquals("", viewModel.getOutput().get());
+    }
+
+    @Test
+    public void viewModelConstructorThrowsExceptionWithNullLogger() {
+        try {
+            new LengthConverterViewModel(null);
+            fail("Exception wasn't thrown");
+        } catch (IllegalArgumentException ex) {
+            assertEquals("Logger parameter can't be null", ex.getMessage());
+        } catch (Exception ex) {
+            fail("Invalid exception type");
+        }
+    }
+
+    @Test
+    public void logIsEmptyInTheBeginning() {
+        List<String> log = viewModel.getLog();
+
+        assertTrue(log.isEmpty());
+    }
+
+    @Test
+    public void logContainsProperMessageAfterConvertion() {
+        setCorrectInput();
+        viewModel.convert();
+        String message = viewModel.getLog().get(2);
+
+        assertTrue(message.matches(".*" + LogMessages.CONVERT_WAS_PRESSED + ".*"));
+    }
+
+    @Test
+    public void logContainsInputArgumentsAfterConvertion() {
+        setCorrectInput();
+
+        viewModel.convert();
+
+        String message = viewModel.getLog().get(2);
+        assertTrue(message.matches(".*" + viewModel.getFromType().get()
+                + ".*" + viewModel.getToType().get() + ".*"));
+    }
+
+    @Test
+    public void swappingIsMentionedInTheLog() {
+        setCorrectInput();
+
+        viewModel.swap();
+
+        String message = viewModel.getLog().get(4);
+        assertTrue(message.matches(".*" + LogMessages.SWAP_PRESSED + ".*"));
+    }
+
+    @Test
+    public void canPutSeveralLogMessages() {
+        setCorrectInput();
+
+        viewModel.convert();
+        viewModel.convert();
+
+        assertEquals(4, viewModel.getLog().size());
+    }
+
+    @Test
+    public void canSeeFromTypeChangeInLog() {
+        setCorrectInput();
+
+        viewModel.getFromType().set(LengthType.METER);
+
+        String message = viewModel.getLog().get(2);
+        assertTrue(message.matches(".*" + LogMessages.START_LENGHT_TYPE_WAS_CHANGED + ".*"));
+    }
+
+    @Test
+    public void canSeeToTypeChangeInLog() {
+        setCorrectInput();
+
+        viewModel.getToType().set(LengthType.CENTIMETER);
+
+        String message = viewModel.getLog().get(2);
+        assertTrue(message.matches(".*" + LogMessages.RESULT_LENGHT_TYPE_WAS_CHANGED + ".*"));
+    }
+
+    @Test
+    public void typeChangeIsNotLoggedIfNotChanged() {
+        viewModel.getToType().set(LengthType.CENTIMETER);
+        viewModel.getFromType().set(LengthType.METER);
+
+        assertEquals(0, viewModel.getLog().size());
+    }
+
+    @Test
+    public void convertIsNotCalledWhenButtonIsDisabled() {
+        viewModel.convert();
+
+        assertTrue(viewModel.getLog().isEmpty());
     }
 }

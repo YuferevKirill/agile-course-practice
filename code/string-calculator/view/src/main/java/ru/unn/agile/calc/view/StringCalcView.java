@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import ru.unn.agile.calc.infrastructure.TxtLogger;
 import ru.unn.agile.calc.viewmodel.StringCalcViewModel;
 
 public class StringCalcView {
@@ -24,6 +25,7 @@ public class StringCalcView {
 
     @FXML
     void initialize() {
+        viewModel.setLogger(new TxtLogger("./TxtLogger-lab3.log"));
 
         expressionTf.textProperty().bindBidirectional(viewModel.expressionTfProperty());
         expressionTf.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -32,6 +34,12 @@ public class StringCalcView {
                 }
         );
         expressionTf.tooltipProperty().setValue(new Tooltip(tooltip));
+        expressionTf.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                viewModel.onExpressionTfFocusChanged();
+            }
+        });
+
         resultLbl.textProperty().bindBidirectional(viewModel.resultLblProperty());
 
         calcBtn.disableProperty().bindBidirectional(viewModel.calculationDisabledProperty());
@@ -42,5 +50,4 @@ public class StringCalcView {
     private void setErrorBorder(final boolean active) {
         expressionTf.pseudoClassStateChanged(errorClass, active);
     }
-
 }

@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':queue-ViewModel')
+    testCompile project(':queue-ViewModel').sourceSets.test.output
+}

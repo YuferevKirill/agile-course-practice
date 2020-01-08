@@ -1,0 +1,6 @@
+dependencies {
+    compile project(':statistics-calculation-ViewModel')
+	testCompile project(':statistics-calculation-ViewModel').sourceSets.test.output
+}
+
+

@@ -1,3 +1,4 @@
 dependencies {
     compile project(':temperature-converter-ViewModel')
+	compile project(':temperature-converter-Infrastructure')
 }

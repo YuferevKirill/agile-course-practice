@@ -1,33 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.text.Font?>
 
 <?import ru.unn.agile.calc.viewmodel.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="ru.unn.agile.calc.view.StringCalcView">
-    <fx:define>
-        <StringCalcViewModel fx:id="viewModel"/>
-    </fx:define>
-    <Label alignment="CENTER" layoutX="150.0" layoutY="50" prefHeight="45.0" prefWidth="300.0"
-           text="Basic String Calculator">
-        <font>
-            <Font size="30.0"/>
-        </font>
-    </Label>
-    <TextField fx:id="expressionTf" layoutX="100.0" layoutY="150.0" prefHeight="40.0" prefWidth="360.0"
-               text="Type your expression ... "/>
-    <Button fx:id="calcBtn" layoutX="485.0" layoutY="150.0" mnemonicParsing="false" prefWidth="75" text="=">
-        <font>
-            <Font size="16.0"/>
-        </font>
-    </Button>
-    <Label fx:id="resultLbl" alignment="CENTER" layoutX="160.0" layoutY="235.0" prefHeight="30.0" prefWidth="280.0">
-        <font>
-            <Font size="19.0"/>
-        </font>
-    </Label>
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.unn.agile.calc.view.StringCalcView">
+   <children>
+       <fx:define>
+           <StringCalcViewModel fx:id="viewModel"/>
+       </fx:define>
+       <Label alignment="CENTER" layoutX="150.0" layoutY="50" prefHeight="45.0" prefWidth="300.0" text="Basic String Calculator">
+           <font>
+               <Font size="30.0" />
+           </font>
+       </Label>
+       <TextField fx:id="expressionTf" layoutX="100.0" layoutY="150.0" prefHeight="40.0" prefWidth="360.0" text="Type your expression ... " />
+       <Button fx:id="calcBtn" layoutX="485.0" layoutY="150.0" mnemonicParsing="false" prefWidth="75" text="=">
+           <font>
+               <Font size="16.0" />
+           </font>
+       </Button>
+       <Label fx:id="resultLbl" alignment="CENTER" layoutX="140.0" layoutY="206.0" prefHeight="30.0" prefWidth="280.0">
+           <font>
+               <Font size="19.0" />
+           </font>
+       </Label>
+       <TextArea fx:id="areaLog" editable="false" layoutX="100.0" layoutY="251.0" prefHeight="200.0" prefWidth="360.0" text="${viewModel.logs}" wrapText="true" VBox.vgrow="ALWAYS" />
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
 </AnchorPane>

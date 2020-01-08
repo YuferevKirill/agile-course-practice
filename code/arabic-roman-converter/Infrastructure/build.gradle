@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':arabic-roman-converter-ViewModel')
+    testCompile project(':arabic-roman-converter-ViewModel').sourceSets.test.output
+}

@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import ru.unn.agile.temperatureconverter.viewmodel.ViewModel.ListOfTemperatures;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class ViewModelTests {
@@ -13,7 +15,12 @@ public class ViewModelTests {
 
     @Before
     public void setUp() {
-        viewModel = new ViewModel();
+        FakeLogger fakeLogger = new FakeLogger();
+        viewModel = new ViewModel(fakeLogger);
+    }
+
+    public void setViewModel(final ViewModel viewModel) {
+        this.viewModel = viewModel;
     }
 
     @After
@@ -251,6 +258,7 @@ public class ViewModelTests {
 
         assertEquals("0.0", viewModel.getResultTemperature());
     }
+
     @Test
     public void convertCelsius100ToCelsius100() {
         viewModel.setTo(ListOfTemperatures.CELSIUS);
@@ -259,5 +267,211 @@ public class ViewModelTests {
         viewModel.calculate();
 
         assertEquals("100.0", viewModel.getResultTemperature());
+    }
+
+    @Test
+    public void canCreateViewModelWithLogger() {
+        FakeLogger logger = new FakeLogger();
+        ViewModel viewModel = new ViewModel(logger);
+
+        assertNotNull(viewModel);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void throwWhenCreateViewModelWithNullLogger() {
+        ViewModel viewModel = new ViewModel(null);
+    }
+
+    @Test
+    public void doesLogMessageContainTwoMessageInitially() {
+        List<String> log = viewModel.getLog();
+        assertEquals(2, log.size());
+    }
+
+    @Test
+    public void isLogMessageNotEmptyAfterSetFromTemperature() {
+        viewModel.setFromTemperature("0.0");
+        List<String> log = viewModel.getLog();
+
+        assertTrue(log.get(2).matches(".*" + "Input updated" + ".*"));
+    }
+
+    @Test
+    public void doesLogMessageContainCorrectTemperature() {
+        viewModel.setFromTemperature("0.0");
+        List<String> log = viewModel.getLog();
+
+        assertTrue(log.get(2).matches(".*"
+                + "Input updated: value of from temperature = " + 0.0 + ".*"));
+    }
+
+    @Test
+    public void isLogMessageNotEmptyAfterSetFrom() {
+        viewModel.setFrom(ListOfTemperatures.NEWTON);
+        List<String> log = viewModel.getLog();
+
+        assertTrue(log.get(2).matches(".*" + "Input updated" + ".*"));
+    }
+
+    @Test
+    public void doesLogMessageContainCorrectFromOption() {
+        viewModel.setFrom(ListOfTemperatures.KELVIN);
+        List<String> log = viewModel.getLog();
+
+        assertTrue(log.get(2).matches(".*" + "Input updated: "
+                + "from temperature = " + ListOfTemperatures.KELVIN + ".*"));
+    }
+
+    @Test
+    public void isLogMessageNotEmptyAfterSetTo() {
+        viewModel.setTo(ListOfTemperatures.FAHRENHEIT);
+        List<String> log = viewModel.getLog();
+
+        assertTrue(log.get(2).matches(".*" + "Input updated" + ".*"));
+    }
+
+    @Test
+    public void doesLogMessageContainCorrectToOption() {
+        viewModel.setTo(ListOfTemperatures.FAHRENHEIT);
+        List<String> log = viewModel.getLog();
+
+        assertTrue(log.get(2).matches(".*" + "Input updated: "
+                + "to temperature = " + ListOfTemperatures.FAHRENHEIT + ".*"));
+    }
+
+    @Test
+    public void doesLogMessageContainErrorMessage() {
+        viewModel.setFromTemperature("abc");
+        viewModel.processInput();
+        List<String> log = viewModel.getLog();
+
+        assertTrue(log.get(3).matches(".*" + "Error is displayed" + ".*"));
+    }
+
+    @Test
+    public void doesLogMessageContainErrorMessageWithTextInCaseIncorrectInput() {
+        viewModel.setFromTemperature("abc");
+        viewModel.processInput();
+        List<String> log = viewModel.getLog();
+
+        assertTrue(log.get(3).matches(".*" + "Error is displayed: "
+                + viewModel.getStatusText() + ".*"));
+    }
+
+    @Test
+    public void doesLogMessageContainErrorMessageWithTextInCaseAbsoluteZero() {
+        viewModel.setFromTemperature("-300");
+        viewModel.processInput();
+        List<String> log = viewModel.getLog();
+
+        assertTrue(log.get(3).matches(".*" + "Error is displayed: "
+                + viewModel.getStatusText() + ".*"));
+    }
+
+    @Test
+    public void doesLogMessageContainInfoAboutPressCalculate() {
+        viewModel.setFromTemperature("0.0");
+        viewModel.calculate();
+        List<String> log = viewModel.getLog();
+
+        assertTrue(log.get(3).matches(".*" + "Calculate" + ".*"));
+    }
+
+    @Test
+    public void isLogMessageNotUpdatedAfterSetEqualFromTemperature() {
+        viewModel.setFromTemperature("0.0");
+        viewModel.setFromTemperature("0.0");
+        List<String> log = viewModel.getLog();
+
+        assertEquals(3, log.size());
+    }
+
+    @Test
+    public void isLogMessageNotUpdatedAfterSetEqualFrom() {
+        viewModel.setFrom(ListOfTemperatures.KELVIN);
+        viewModel.setFrom(ListOfTemperatures.KELVIN);
+        List<String> log = viewModel.getLog();
+
+        assertEquals(3, log.size());
+    }
+
+    @Test
+    public void doesLogMessageContainDefaultFromTemperature() {
+        List<String> log = viewModel.getLog();
+
+        assertTrue(log.get(0).matches(".*" + "Input updated: "
+                + "from temperature = " + ListOfTemperatures.CELSIUS + ".*"));
+    }
+
+    @Test
+    public void doesLogMessageContainDefaultToTemperature() {
+        List<String> log = viewModel.getLog();
+
+        assertTrue(log.get(1).matches(".*" + "Input updated: "
+                + "to temperature = " + ListOfTemperatures.CELSIUS + ".*"));
+    }
+
+    @Test
+    public void isLogMessageNotUpdatedAfterSetEqualTo() {
+        viewModel.setTo(ListOfTemperatures.KELVIN);
+        viewModel.setTo(ListOfTemperatures.KELVIN);
+        List<String> log = viewModel.getLog();
+
+        assertEquals(3, log.size());
+    }
+
+    @Test
+    public void doesLogMessageContainResultAfterCalculate() {
+        viewModel.setFromTemperature("0.0");
+        viewModel.calculate();
+        List<String> log = viewModel.getLog();
+
+        assertTrue(log.get(4).matches(".*" + "Result temperature = 0.0" + ".*"));
+    }
+
+    @Test
+    public void doesLogMessageNotContainResultAfterCalculateWithBadInput() {
+        viewModel.setFromTemperature("abc");
+        viewModel.calculate();
+        List<String> log = viewModel.getLog();
+
+        assertEquals(5, log.size());
+    }
+
+    @Test
+    public void doesLogMessageContainFromForCalculate() {
+        viewModel.setFromTemperature("0.0");
+        viewModel.calculate();
+        List<String> log = viewModel.getLog();
+
+        assertTrue(log.get(4).matches(".*" + "From: " + ListOfTemperatures.CELSIUS + ".*"));
+    }
+
+    @Test
+    public void doesLogMessageContainToForCalculate() {
+        viewModel.setFromTemperature("0.0");
+        viewModel.calculate();
+        List<String> log = viewModel.getLog();
+
+        assertTrue(log.get(4).matches(".*" + "To: " + ListOfTemperatures.CELSIUS + ".*"));
+    }
+
+    @Test
+    public void doesLogMessageContainFromTemperatureForCalculate() {
+        viewModel.setFromTemperature("0.0");
+        viewModel.calculate();
+        List<String> log = viewModel.getLog();
+
+        assertTrue(log.get(4).matches(".*" + "Initial temperature = 0.0" + ".*"));
+    }
+
+    @Test
+    public void doesLogMessageContainCorrectError() {
+        viewModel.setFromTemperature("0.");
+        viewModel.processInput();
+        List<String> log = viewModel.getLog();
+
+        assertTrue(log.get(3).matches(".*" + "Error is displayed: "
+                + "Error. Please enter correct temperature" + ".*"));
     }
 }

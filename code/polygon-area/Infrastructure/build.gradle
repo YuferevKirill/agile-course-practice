@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':polygon-area-ViewModel')
+    testCompile project(':polygon-area-ViewModel').sourceSets.test.output
+}

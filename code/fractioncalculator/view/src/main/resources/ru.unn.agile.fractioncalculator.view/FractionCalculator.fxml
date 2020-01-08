@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import ru.unn.agile.fractioncalculator.viewmodel.ViewModel?>
+
+<AnchorPane prefHeight="233.0" prefWidth="375.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.unn.agile.fractioncalculator.view.FractionCalculator">
+   <fx:define>
+      <ViewModel fx:id="viewModel" />
+   </fx:define>
+
+   <children>
+      <TextField fx:id="firstFraction" layoutX="50.0" layoutY="69.0" prefHeight="25.0" prefWidth="80.0" />
+      <TextField fx:id="secondFraction" layoutX="246.0" layoutY="69.0" prefHeight="25.0" prefWidth="80.0" />
+      <Button fx:id="plusButton" layoutX="163.0" layoutY="22.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="50.0" text="+" />
+      <Button fx:id="minusButton" layoutX="163.0" layoutY="56.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="50.0" text="-" />
+      <Button fx:id="multipleButton" layoutX="163.0" layoutY="90.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="50.0" text="*" />
+      <Button fx:id="divideButton" layoutX="163.0" layoutY="125.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="50.0" text="/" />
+      <Label fx:id="resultLabel" layoutX="130.0" layoutY="164.0" prefHeight="25.0" prefWidth="116.0" text="Label" textAlignment="CENTER" />
+   </children>
+</AnchorPane>

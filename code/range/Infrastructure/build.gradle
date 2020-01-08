@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':range-ViewModel')
+    testCompile project(':range-ViewModel').sourceSets.test.output
+}

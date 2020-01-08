@@ -1,3 +1,4 @@
 dependencies {
     compile project(':complex-number-calculator-ViewModel')
+    compile project(':complex-number-calculator-Infrastructure')
 }

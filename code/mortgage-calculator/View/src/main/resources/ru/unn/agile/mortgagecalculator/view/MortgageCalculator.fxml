@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<?import ru.unn.agile.mortgagecalculator.viewmodel.MortgageCalculatorViewModel?>
+<AnchorPane prefHeight="513.0" prefWidth="552.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.unn.agile.mortgagecalculator.view.MortgageCalculatorView">
+      <fx:define>
+         <MortgageCalculatorViewModel fx:id="viewModel" />
+      </fx:define>
+      <Button fx:id="calculate" layoutX="92.0" layoutY="461.0" mnemonicParsing="false" text="Calculate" />
+      <TextField fx:id="apartmentPrice" layoutX="157.0" layoutY="82.0" />
+      <TextField fx:id="firstPayment" layoutX="157.0" layoutY="115.0" />
+      <TextField fx:id="loanPeriod" layoutX="157.0" layoutY="150.0" />
+      <TextField fx:id="interestRate" layoutX="157.0" layoutY="183.0" />
+      <ChoiceBox fx:id="loanPeriodType" layoutX="317.0" layoutY="150.0" prefWidth="150.0">
+         <items>
+            <FXCollections fx:factory="observableArrayList">
+               <String fx:value="Year" />
+               <String fx:value="Month" />
+            </FXCollections>
+         </items>
+      </ChoiceBox>
+      <Text layoutX="56.0" layoutY="99.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Apartment Price" />
+      <Text layoutX="52.0" layoutY="132.0" strokeType="OUTSIDE" strokeWidth="0.0" text="First payment" />
+      <Text layoutX="56.0" layoutY="167.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Loan Period" />
+      <Text layoutX="56.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Interest rate 60 max" />
+      <Text layoutX="27.0" layoutY="267.0" strokeType="OUTSIDE" strokeWidth="0.0" text="One-time commissions" />
+      <ChoiceBox fx:id="monthlyCommissionType" layoutX="317.0" layoutY="283.0" prefWidth="150.0">
+         <items>
+            <FXCollections fx:factory="observableArrayList">
+               <String fx:value="Percent" />
+               <String fx:value="Rubles" />
+            </FXCollections>
+         </items>
+      </ChoiceBox>
+      <ChoiceBox fx:id="oneTimeCommissionType" layoutX="317.0" layoutY="250.0" prefWidth="150.0">
+         <items>
+            <FXCollections fx:factory="observableArrayList">
+               <String fx:value="Percent" />
+               <String fx:value="Rubles" />
+            </FXCollections>
+         </items>
+      </ChoiceBox>
+      <TextField fx:id="monthlyCommissions" layoutX="157.0" layoutY="283.0" />
+      <TextField fx:id="oneTimeCommissions" layoutX="157.0" layoutY="250.0" />
+      <Text layoutX="32.0" layoutY="300.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Monthly commission" />
+      <Text layoutX="43.0" layoutY="336.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Type of payment" />
+      <ChoiceBox fx:id="typeOfPayment" layoutX="157.0" layoutY="319.0" prefWidth="150.0">
+         <items>
+            <FXCollections fx:factory="observableArrayList">
+               <String fx:value="Annuity" />
+               <String fx:value="Differential" />
+            </FXCollections>
+         </items>
+      </ChoiceBox>
+      <TextArea fx:id="result" layoutX="27.0" layoutY="378.0" prefHeight="63.0" prefWidth="194.0" promptText="Result" />
+      <TextArea fx:id="areaLog" editable="false" layoutX="247.0" layoutY="351.0" prefHeight="156.0" prefWidth="276.0" VBox.vgrow="ALWAYS" />
+</AnchorPane>

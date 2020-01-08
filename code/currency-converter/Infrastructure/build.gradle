@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':currency-converter-ViewModel')
+    testCompile project(':currency-converter-ViewModel').sourceSets.test.output
+}

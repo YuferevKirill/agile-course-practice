@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':vector-operations-ViewModel')
+    testCompile project(':vector-operations-ViewModel').sourceSets.test.output
+}
